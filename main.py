@@ -14,7 +14,7 @@ async def test_connection():
         # إعداد العميل مع مهلة زمنية 5 ثواني
         client = AsyncIOMotorClient(MONGODB_URI, serverSelectionTimeoutMS=5000)
         
-        # محاولة فحص الاتصال فعلياً بطلب 'ping'
+        # محاولة فحص الاتصال بطلب 'ping'
         await asyncio.wait_for(client.admin.command('ping'), timeout=5.0)
         
         return {
