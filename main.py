@@ -1,3 +1,15 @@
+from fastapi import FastAPI
+from motor.motor_asyncio import AsyncIOMotorClient
+import asyncio
+
+app = FastAPI()
+
+# السطر ده هو السر
+@app.get("/")
+async def root():
+    return {"message": "فل الفففففف يا هندسة! السيستم نطق أخيراً."}
+
+# وبقية الكود بتاع test_connection سيبه زي ما هو تحت
 import os
 from fastapi import FastAPI
 from motor.motor_asyncio import AsyncIOMotorClient
