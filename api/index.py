@@ -5,32 +5,31 @@ import asyncio
 
 app = FastAPI()
 
-# جلب الرابط من Vercel
+# الرابط من Vercel
 MONGODB_URI = os.getenv("MONGODB_URI")
-
-# إضافة إعدادات الأمان والاتصال مباشرة في الكود
-client = AsyncIOMotorClient(
-    MONGODB_URI,
-    tls=True,
-    tlsAllowInvalidCertificates=True, # دي عشان نتخطى مشاكل الشهادات لو موجودة
-    serverSelectionTimeoutMS=5000
-)
-
-db = client.ingenious_db
 
 @app.get("/")
 async def test_connection():
     try:
-        # بنحاول نكلم القاعدة ونشوفها هترد في خلال 3 ثواني ولا لأ
-        await asyncio.wait_for(client.admin.command('ping'), timeout=3.0)
+        # بنعرف العميل جوه الدالة عشان نضمن إنه يلقط التغييرات
+        client = AsyncIOMotorClient(
+            MONGODB_URI,
+            serverSelectionTimeoutMS=5000,
+            tls=True,
+            tlsAllowInvalidCertificates=True
+        )
+        
+        # محاولة فحص الاتصال
+        await asyncio.wait_for(client.admin.command('ping'), timeout=4.0)
+        
         return {
             "status": "success",
-            "message": "تم الربط بنجاح يا محمود! إحنا كدة أونلاين فعلياً.",
-            "database": "Connected to MongoDB Atlas"
+            "message": "فل الفففففف يا محمود! السيستم نطق أخيراً.",
+            "info": "Connected to Ingenious Database"
         }
     except Exception as e:
         return {
-            "status": "error",
-            "message": "لسه في خناقة مع الداتا بيز",
-            "details": str(e)
+            "status": "waiting",
+            "message": "السيرفر لسه بيفكر، اعمل ريفريش كمان دقيقة",
+            "error_detail": str(e)
         }
